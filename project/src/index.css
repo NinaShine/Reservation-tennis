@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+}
+
+@layer components {
+  .btn-primary { @apply bg-tennis-600 hover:bg-tennis-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200; }
+  .btn-secondary { @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200; }
+  .card { @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6; }
+}

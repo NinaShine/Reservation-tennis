@@ -1,0 +1,58 @@
+[
+  {
+    "id": "BK1754836093796",
+    "date": "2025-08-10",
+    "timeSlot": "08:00",
+    "duration": 1,
+    "courtId": "c1",
+    "courtName": "Terrain dur 1",
+    "coachId": "p1",
+    "coachName": "Coach Amine",
+    "playerName": "Nina",
+    "playerEmail": "salhinina2002@gmail.com",
+    "playerPhone": "0658482295",
+    "createdAt": "2025-08-10T14:28:15.737Z"
+  },
+  {
+    "id": "BK1754836352618",
+    "date": "2025-08-16",
+    "timeSlot": "10:30",
+    "duration": 1,
+    "courtId": "c2",
+    "courtName": "Terrain dur 2",
+    "coachId": "p2",
+    "coachName": "Coach Hanane",
+    "playerName": "imene",
+    "playerEmail": "salhinina2002@gmail.com",
+    "playerPhone": "0658482295",
+    "createdAt": "2025-08-10T14:32:34.712Z"
+  },
+  {
+    "id": "BK1754836617606",
+    "date": "2025-08-10",
+    "timeSlot": "08:30",
+    "duration": 1,
+    "courtId": "c1",
+    "courtName": "Terrain dur 1",
+    "coachId": "p1",
+    "coachName": "Coach Amine",
+    "playerName": "nina",
+    "playerEmail": "salhinina2002@gmail.com",
+    "playerPhone": "0658482295",
+    "createdAt": "2025-08-10T14:36:59.750Z"
+  },
+  {
+    "id": "BK1754859726576",
+    "date": "2025-08-10",
+    "timeSlot": "08:00",
+    "duration": 2,
+    "courtId": "c1",
+    "courtName": "Terrain dur 1",
+    "coachId": "p3",
+    "coachName": "Coach Ronaldo",
+    "playerName": "Nina",
+    "playerEmail": "salhinina2002@gmail.com",
+    "playerPhone": "0658482295",
+    "createdAt": "2025-08-10T21:02:21.503Z"
+  }
+]
