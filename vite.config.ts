@@ -1,17 +1,12 @@
-// vite.config.ts (ou vite.config.mts si tu utilises ESM)
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/',
+  // proxy = pour le DEV uniquement; en PROD on passera par VITE_API_URL
   server: {
     proxy: {
-      '/api': {
-        target: 'http://localhost:5174', // port de ton backend
-        changeOrigin: true,
-        secure: false,
-      }
+      '/api': { target: 'http://localhost:5174', changeOrigin: true }
     }
   }
 })
