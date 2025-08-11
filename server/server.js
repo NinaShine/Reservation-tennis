@@ -9,7 +9,27 @@ const { readBookings, addBooking } = require('./storage');
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// ==== CONFIG CORS ====
+const allowedOrigins = [
+  'https://reservation-tennis.mbb.app',        // ton domaine principal Vercel
+  'https://reservation-tennis-*.vercel.app'    // previews si besoin
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true); // permet Postman/tests locaux
+    const isAllowed = allowedOrigins.some(pattern =>
+      pattern.includes('*')
+        ? new RegExp('^' + pattern.replace('.', '\\.').replace('*', '.*') + '$').test(origin)
+        : pattern === origin
+    );
+    callback(isAllowed ? null : new Error('Not allowed by CORS'), isAllowed);
+  },
+  credentials: true
+}));
+// ======================
+
 app.use(express.json({ limit: "1mb" }));
 
 const transporter = nodemailer.createTransport({
@@ -34,7 +54,7 @@ app.post("/api/send-confirmation", async (req, res) => {
     }
 
     const subject = `M.B.B — Confirmation réservation ${bookingId}`;
-    const logoPath = path.join(__dirname, "assets", "mbb-logo.png"); // mets le fichier ici
+    const logoPath = path.join(__dirname, "assets", "mbb-logo.png");
 
     const html = `
       <div style="font-family:system-ui,-apple-system,Segoe UI,Roboto;line-height:1.5">
@@ -87,46 +107,45 @@ function escapeHtml(str) {
   }[c]));
 }
 
-// Liste complète des réservations (admin)
 app.get('/api/bookings', async (_req, res) => {
-    try {
-      const list = await readBookings();
-      res.json({ ok: true, items: list });
-    } catch (e) {
-      console.error('readBookings error:', e);
-      res.status(500).json({ ok: false, message: 'Erreur lecture réservations' });
-    }
-  });
-  
-  // Création/Enregistrement d'une réservation (après vérif côté front)
-  app.post('/api/bookings', async (req, res) => {
-    try {
-      const {
-        id, date, timeSlot, duration,
-        courtId, courtName,
-        coachId, coachName,
-        playerName, playerEmail, playerPhone
-      } = req.body || {};
-  
-      if (!id || !date || !timeSlot || !courtId || !playerName || !playerEmail) {
-        return res.status(400).json({ ok: false, message: 'Champs requis manquants.' });
-      }
-  
-      const payload = {
-        id, date, timeSlot, duration: duration ?? 1,
-        courtId, courtName: courtName || null,
-        coachId: coachId || null, coachName: coachName || null,
-        playerName, playerEmail, playerPhone: playerPhone || null,
-        createdAt: new Date().toISOString()
-      };
-  
-      await addBooking(payload);
-      res.json({ ok: true, item: payload });
-    } catch (e) {
-      console.error('addBooking error:', e);
-      res.status(500).json({ ok: false, message: 'Erreur enregistrement réservation' });
-    }
-  });
+  try {
+    const list = await readBookings();
+    res.json({ ok: true, items: list });
+  } catch (e) {
+    console.error('readBookings error:', e);
+    res.status(500).json({ ok: false, message: 'Erreur lecture réservations' });
+  }
+});
 
-const PORT = Number(process.env.PORT || 5174);
-app.listen(PORT, () => console.log(`API en écoute sur http://localhost:${PORT}`));
+app.post('/api/bookings', async (req, res) => {
+  try {
+    const {
+      id, date, timeSlot, duration,
+      courtId, courtName,
+      coachId, coachName,
+      playerName, playerEmail, playerPhone
+    } = req.body || {};
+
+    if (!id || !date || !timeSlot || !courtId || !playerName || !playerEmail) {
+      return res.status(400).json({ ok: false, message: 'Champs requis manquants.' });
+    }
+
+    const payload = {
+      id, date, timeSlot, duration: duration ?? 1,
+      courtId, courtName: courtName || null,
+      coachId: coachId || null, coachName: coachName || null,
+      playerName, playerEmail, playerPhone: playerPhone || null,
+      createdAt: new Date().toISOString()
+    };
+
+    await addBooking(payload);
+    res.json({ ok: true, item: payload });
+  } catch (e) {
+    console.error('addBooking error:', e);
+    res.status(500).json({ ok: false, message: 'Erreur enregistrement réservation' });
+  }
+});
+
+// ==== Port dynamique pour Render ====
+const PORT = Number(process.env.PORT || 10000);
+app.listen(PORT, '0.0.0.0', () => console.log(`API en écoute sur http://localhost:${PORT}`));
