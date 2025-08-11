@@ -12,22 +12,22 @@ const app = express();
 
 // ==== CONFIG CORS ====
 const allowedOrigins = [
-  'https://reservation-tennis.mbb.app',        // ton domaine principal Vercel
-  'https://reservation-tennis-*.vercel.app'    // previews si besoin
+  'https://reservation-tennis.mbb.app', // domaine prod
+  // toutes les previews Vercel pour ce projet
+  /^https:\/\/reservation-tennis-(git-main|[a-z0-9]+)-ninashines-projects\.vercel\.app$/i
 ];
 
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true); // permet Postman/tests locaux
-    const isAllowed = allowedOrigins.some(pattern =>
-      pattern.includes('*')
-        ? new RegExp('^' + pattern.replace('.', '\\.').replace('*', '.*') + '$').test(origin)
-        : pattern === origin
+  origin: (origin, cb) => {
+    if (!origin) return cb(null, true);
+    const ok = allowedOrigins.some(p =>
+      p instanceof RegExp ? p.test(origin) : p === origin
     );
-    callback(isAllowed ? null : new Error('Not allowed by CORS'), isAllowed);
+    cb(ok ? null : new Error('Not allowed by CORS'), ok);
   },
   credentials: true
 }));
+
 // ======================
 
 app.use(express.json({ limit: "1mb" }));
